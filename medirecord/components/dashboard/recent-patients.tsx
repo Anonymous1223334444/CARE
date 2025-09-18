@@ -1,0 +1,139 @@
+"use client"
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Plus, Users, MessageSquare, FileText } from "lucide-react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { getPatients } from "@/lib/api"
+
+interface Patient {
+  id: number;
+  full_name: string;
+  phone: string;
+  is_active: boolean;
+  created_at: string;
+  avatar: string;
+}
+
+export default function RecentPatients() {
+  const router = useRouter()
+  const [patients, setPatients] = useState<Patient[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadRecentPatients() {
+      setLoading(true)
+      const recentPatients = await getPatients(4)
+      setPatients(recentPatients)
+      setLoading(false)
+    }
+    loadRecentPatients()
+  }, [])
+
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case "new-patient":
+        router.push("/dashboard/patients/new")
+        break
+      case "view-all":
+        router.push("/dashboard/patients")
+        break
+      case "messages":
+        router.push("/dashboard/messages")
+        break
+      case "documents":
+        router.push("/dashboard/documents")
+        break
+      default:
+        break
+    }
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Patients récents</CardTitle>
+        <CardDescription>Derniers patients ajoutés à votre plateforme</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {loading ? (
+            <p>Chargement...</p>
+          ) : (
+            patients.map((patient, index) => (
+              <div key={index} className="flex items-center space-x-4">
+                <Avatar>
+                  <AvatarImage src={patient.avatar || "/placeholder.svg"} alt={patient.full_name} />
+                  <AvatarFallback>
+                    {patient.full_name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 space-y-1">
+                  <p className="text-sm font-medium leading-none">{patient.full_name}</p>
+                  <p className="text-sm text-muted-foreground">{patient.phone}</p>
+                </div>
+                <div className="text-right space-y-1">
+                  <Badge
+                    variant={
+                      patient.is_active ? "default" : "outline"
+                    }
+                  >
+                    {patient.is_active ? "Actif" : "Inactif"}
+                  </Badge>
+                  <p className="text-xs text-muted-foreground">{new Date(patient.created_at).toLocaleDateString()}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Actions rapides */}
+        <div className="mt-6 space-y-2">
+          <h4 className="text-sm font-medium text-muted-foreground">Actions rapides</h4>
+          <div className="space-y-2">
+            <Link href="/dashboard/patients/new">
+              <Button className="w-full gradient-bg text-slate-900 font-semibold hover:opacity-90">
+                <Plus className="mr-2 h-4 w-4" />
+                Nouveau patient
+              </Button>
+            </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full justify-start"
+              onClick={() => handleQuickAction("view-all")}
+            >
+              <Users className="mr-2 h-4 w-4" />
+              Voir tous les patients
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full justify-start"
+              onClick={() => handleQuickAction("messages")}
+            >
+              <MessageSquare className="mr-2 h-4 w-4" />
+              Messages WhatsApp
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full justify-start"
+              onClick={() => handleQuickAction("documents")}
+            >
+              <FileText className="mr-2 h-4 w-4" />
+              Gérer documents
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}

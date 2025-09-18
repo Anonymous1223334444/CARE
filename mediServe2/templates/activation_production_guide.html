@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activation WhatsApp - {{ patient_name }}</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: #25d366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        h1 {
+            color: #075e54;
+            margin-bottom: 20px;
+        }
+        .welcome {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .activation-box {
+            background: #e7f3e7;
+            border: 2px solid #25d366;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        .code {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 18px;
+            margin: 20px 0;
+            word-break: break-all;
+            cursor: copy;
+            border: 1px solid #ddd;
+        }
+        .button {
+            display: inline-block;
+            background: #25d366;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #1fb855;
+        }
+        .info {
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+        .phone-number {
+            font-weight: bold;
+            color: #075e54;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .button {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">💬</div>
+        
+        <h1>Activation de votre espace santé</h1>
+        
+        <p class="welcome">
+            Bonjour {{ patient_name }}, <br>
+            Activez votre accès WhatsApp en un clic !
+        </p>
+        
+        <div class="activation-box">
+            <p><strong>Cliquez sur le bouton ci-dessous</strong></p>
+            <p>Vous serez redirigé vers WhatsApp avec le message pré-rempli</p>
+            
+            <a href="{{ activation_url }}" class="button" target="_blank">
+                Activer mon compte WhatsApp
+            </a>
+            
+            <p style="color: #666; font-size: 14px; margin-top: 20px;">
+                Le message suivant sera automatiquement ajouté :
+            </p>
+            <div class="code" onclick="copyCode(this)">ACTIVER {{ token }}</div>
+            <p style="font-size: 12px; color: #999;">Cliquez pour copier</p>
+        </div>
+        
+        <div class="info">
+            <p>
+                <strong>Note :</strong> Assurez-vous d'avoir WhatsApp installé sur votre appareil.
+                Si le bouton ne fonctionne pas, vous pouvez envoyer manuellement le code d'activation 
+                au numéro <span class="phone-number">{{ whatsapp_number }}</span>
+            </p>
+            <p style="margin-top: 30px;">
+                {{ health_structure_name }}<br>
+                <small>Si vous rencontrez des difficultés, contactez votre médecin.</small>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        function copyCode(element) {
+            navigator.clipboard.writeText(element.textContent).then(() => {
+                element.style.background = '#d4edda';
+                element.style.borderColor = '#28a745';
+                setTimeout(() => {
+                    element.style.background = 'white';
+                    element.style.borderColor = '#ddd';
+                }, 1000);
+            });
+        }
+        
+        // Auto-click après 3 secondes si l'utilisateur ne fait rien
+        setTimeout(() => {
+            if (confirm('Voulez-vous ouvrir WhatsApp maintenant ?')) {
+                document.querySelector('.button').click();
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

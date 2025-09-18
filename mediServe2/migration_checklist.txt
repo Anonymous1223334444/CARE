@@ -1,0 +1,35 @@
+
+    □ 1. Compte Twilio
+        □ Compte vérifié avec facturation activée
+        □ Solde suffisant pour les messages
+        
+    □ 2. WhatsApp Business
+        □ Profil Facebook Business Manager créé
+        □ Demande WhatsApp Business soumise à Twilio
+        □ Profil d'entreprise approuvé par Meta
+        
+    □ 3. Numéro de téléphone
+        □ Numéro dédié pour WhatsApp (différent du SMS)
+        □ Numéro vérifié et approuvé par Meta
+        
+    □ 4. Templates de messages
+        □ Template d'activation créé et approuvé
+        □ Template de notification document créé
+        □ Templates additionnels si nécessaire
+        
+    □ 5. Configuration technique
+        □ Fichier .env mis à jour avec WHATSAPP_MODE=production
+        □ Numéro de production configuré
+        □ Templates SIDs ajoutés
+        □ SSL/HTTPS configuré
+        
+    □ 6. Tests
+        □ Test d'envoi de template
+        □ Test de réception de message
+        □ Test du webhook en production
+        
+    □ 7. Migration des données
+        □ Backup de la base de données
+        □ Nettoyage des sessions sandbox
+        □ Information des patients actifs
+    
